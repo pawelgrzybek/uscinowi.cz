@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  width: 100%;
+  max-width: 600px;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  min-height: 100dvh;
+  justify-content: center;
+}
