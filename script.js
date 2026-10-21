@@ -124,9 +124,9 @@ const IDLE_RESET = 10000;
 let round = [];
 let idleTimer;
 
-// Each round shows the phrases in a random order and ends with the number
+// Each round shows the phrases in a random order, then CALLMENOW, then the number
 function nextUp() {
-  if (round.length === 0) round = [...[...PHRASES].sort(() => Math.random() - 0.5).flat(), PHONE];
+  if (round.length === 0) round = [...[...PHRASES].sort(() => Math.random() - 0.5).flat(), "CALLMENOW", PHONE];
   return round.shift();
 }
 
