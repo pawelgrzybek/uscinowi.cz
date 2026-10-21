@@ -1,7 +1,6 @@
 const PHONE = "506186821";
 
 const board = document.getElementById("board");
-const button = document.getElementById("reveal");
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -54,32 +53,55 @@ class Flap {
   }
 }
 
+const DIGITS = [..."0123456789"];
+const LETTERS = [..."ABCDEFGHIJKLMNOPRSTUWYZĄĆĘŁŃÓŚŹŻ"];
+
+// Nine-letter words about the work, each fills the board on its own pull
+const KEYWORDS = ["BRANDBOOK", "WEBDESIGN", "MOODBOARD"];
+
+// Lay out one flap per character, in groups (a group never breaks across lines)
+function buildBoard(el, groups) {
+  const flaps = [];
+  for (const text of groups) {
+    const group = document.createElement("div");
+    group.className = "group";
+    for (let i = 0; i < text.length; i++) {
+      const flap = new Flap();
+      group.append(flap.el);
+      flaps.push(flap);
+    }
+    el.append(group);
+  }
+  return flaps;
+}
+
 const digits = PHONE.replace(/\D/g, "").split("");
-const flaps = digits.map(() => new Flap());
+const flaps = buildBoard(board, digits.join("").match(/.{1,3}/g));
 
-for (let i = 0; i < flaps.length; i += 3) {
-  const group = document.createElement("div");
-  group.className = "group";
-  flaps.slice(i, i + 3).forEach((flap) => group.append(flap.el));
-  board.append(group);
+function randomFrom(pool, except) {
+  let char;
+  do char = pool[Math.floor(Math.random() * pool.length)];
+  while (char === except);
+  return char;
 }
 
-function randomDigit(except) {
-  let digit;
-  do digit = String(Math.floor(Math.random() * 10));
-  while (digit === except);
-  return digit;
-}
-
-// Every card shuffles random digits, then they lock onto the number one by one
-async function shuffleTo(flap, target, stopAt) {
+// A card shuffles random characters, then locks onto its target
+async function shuffleTo(flap, target, stopAt, pool) {
   while (performance.now() < stopAt) {
-    await flap.flip(randomDigit(flap.value), 90);
+    await flap.flip(randomFrom(pool, flap.value), 90);
   }
   if (flap.value !== target) await flap.flip(target, 280);
 }
 
-const SHOW_FOR = 10000;
+// Shuffle every card on a board, then lock them on one by one from the left
+async function shuffleBoard(cards, targets, pool, stagger) {
+  if (reducedMotion) {
+    cards.forEach((flap, i) => flap.set(targets[i]));
+    return;
+  }
+  const start = performance.now();
+  await Promise.all(cards.map((flap, i) => shuffleTo(flap, targets[i], start + 900 + i * stagger, pool)));
+}
 
 // While the number is up, the whole board is a tap-to-call link
 function makeCallable() {
@@ -92,139 +114,123 @@ function removeCallable() {
   board.removeAttribute("aria-label");
 }
 
-// Shuffle every card, then lock them onto the targets one by one from the left
-async function shuffleAll(targets) {
-  if (reducedMotion) {
-    flaps.forEach((flap, i) => flap.set(targets[i]));
-    return;
-  }
-  const start = performance.now();
-  await Promise.all(flaps.map((flap, i) => shuffleTo(flap, targets[i], start + 900 + i * 220)));
-}
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 let running = false;
 
-// Show the number for a while, then shuffle again and blank the board
+const IDLE_RESET = 10000;
+let round = [];
+let idleTimer;
+
+// Each round shows the keywords in a random order and ends with the number
+function nextUp() {
+  if (round.length === 0) round = [...[...KEYWORDS].sort(() => Math.random() - 0.5), PHONE];
+  return round.shift();
+}
+
+// The result stays until the next pull, which works as soon as the reels stop
 async function reveal() {
   if (running) return;
   running = true;
-
-  await shuffleAll(digits);
-  makeCallable();
-
-  await sleep(SHOW_FOR);
+  clearTimeout(idleTimer);
+  const next = nextUp();
+  const showNumber = next === PHONE;
 
   removeCallable();
-  await shuffleAll(digits.map(() => ""));
+  await shuffleBoard(flaps, [...next], showNumber ? DIGITS : LETTERS, 220);
+  if (showNumber) makeCallable();
+  running = false;
+  idleTimer = setTimeout(resetBoard, IDLE_RESET);
+}
+
+// Left alone for a while, the board blanks and the round starts over
+async function resetBoard() {
+  if (running) return;
+  running = true;
+  removeCallable();
+  await shuffleBoard(flaps, digits.map(() => ""), DIGITS, 220);
+  round = [];
   running = false;
 }
 
-// Short comic-style "click!" marks fanning out above the cap
-const burst = button.querySelector(".press__burst");
+// Slot machine lever beside the board: drag the knob down (or just click)
+// and the cards spin like reels
+const lever = document.getElementById("lever");
+const arm = lever.querySelector(".lever__arm");
+const knob = lever.querySelector(".lever__knob");
+const KNOB_UP = 20;
+const KNOB_DOWN = 240;
+const PULL_TRIGGER = 0.6;
 
-for (const angle of [165, 200, 235, 270, 305, 340, 15]) {
-  const cos = Math.cos((angle * Math.PI) / 180);
-  const sin = Math.sin((angle * Math.PI) / 180);
-  const x = 80 + cos * 62;
-  const y = 42 + sin * 26;
-  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-  line.setAttribute("x1", x);
-  line.setAttribute("y1", y);
-  line.setAttribute("x2", x + cos * 14);
-  line.setAttribute("y2", y + sin * 14);
-  line.style.setProperty("--dx", `${cos * 10}px`);
-  line.style.setProperty("--dy", `${sin * 10}px`);
-  burst.append(line);
+let pull = 0;
+let dragStartY = null;
+let dragStartPull = 0;
+let dragged = false;
+
+function setPull(p) {
+  pull = p;
+  const y = KNOB_UP + p * (KNOB_DOWN - KNOB_UP);
+  arm.setAttribute("y2", y);
+  knob.setAttribute("cy", y);
 }
 
-// The cap goes down, the "click!" marks fire and the board starts shuffling
-function pressButton() {
-  // keep the cap down for a moment so the press is visible
-  button.classList.add("is-pressed");
-  setTimeout(() => button.classList.remove("is-pressed"), 120);
-
-  // restart the burst animation on every press
-  button.classList.remove("is-clicked");
-  void button.offsetWidth;
-  button.classList.add("is-clicked");
-
-  reveal();
-}
-
-// An outline ball drops from the top of the screen, hits the button and
-// bounces off to the side
-const BALL = 36;
-const GRAVITY = 2800;
-
-const ball = document.createElement("div");
-ball.className = "ball";
-ball.hidden = true;
-ball.innerHTML = `
-  <svg viewBox="0 0 40 40" aria-hidden="true">
-    <circle cx="20" cy="20" r="19" />
-    <path d="M7 7 C15 15 15 25 7 33 M33 7 C25 15 25 25 33 33" />
-  </svg>`;
-document.body.append(ball);
-const ballShape = ball.firstElementChild;
-
-let ballFlying = false;
-
-function dropBall() {
-  ballFlying = true;
-
-  // where the top of the cap is on screen (cap top sits at y=26 of the 160-wide viewBox)
-  const rect = button.getBoundingClientRect();
-  const scale = rect.width / 160;
-  const capTop = rect.top + 26 * scale;
-
-  let x = rect.left + 80 * scale - BALL / 2;
-  let y = -BALL - 20;
-  let vx = 0;
-  let vy = 0;
-  let angle = 0;
-  let hit = false;
-  let last = performance.now();
-
-  ball.hidden = false;
+// the lever snaps back up with a little wobble
+function releaseLever() {
+  const from = pull;
+  const start = performance.now();
+  const duration = reducedMotion ? 1 : 550;
 
   function step(now) {
-    const dt = Math.min((now - last) / 1000, 0.032);
-    last = now;
-
-    vy += GRAVITY * dt;
-    x += vx * dt;
-    y += vy * dt;
-    angle += ((vx * dt) / (BALL / 2)) * (180 / Math.PI);
-
-    if (!hit && y + BALL >= capTop) {
-      hit = true;
-      y = capTop - BALL;
-      vy *= -0.42;
-      vx = (Math.random() < 0.5 ? -1 : 1) * (140 + Math.random() * 80);
-
-      ballShape.classList.add("is-squashed");
-      setTimeout(() => ballShape.classList.remove("is-squashed"), 90);
-      pressButton();
-    }
-
-    ball.style.transform = `translate(${x}px, ${y}px) rotate(${angle}deg)`;
-
-    if (y > window.innerHeight + BALL) {
-      ball.hidden = true;
-      ballFlying = false;
-      return;
-    }
-    requestAnimationFrame(step);
+    const t = Math.min((now - start) / duration, 1);
+    setPull(Math.max(-0.06, from * Math.exp(-5 * t) * Math.cos(t * Math.PI * 3)));
+    if (t < 1) requestAnimationFrame(step);
+    else setPull(0);
   }
 
   requestAnimationFrame(step);
 }
 
-button.addEventListener("click", () => {
-  if (ballFlying || running) return;
+function animatePull(to, duration) {
+  const from = pull;
+  const start = performance.now();
+  return new Promise((resolve) => {
+    function step(now) {
+      const t = Math.min((now - start) / duration, 1);
+      setPull(from + (to - from) * t * t);
+      if (t < 1) requestAnimationFrame(step);
+      else resolve();
+    }
+    requestAnimationFrame(step);
+  });
+}
 
-  if (reducedMotion) pressButton();
-  else dropBall();
+lever.addEventListener("pointerdown", (event) => {
+  dragStartY = event.clientY;
+  dragStartPull = pull;
+  dragged = false;
+  lever.setPointerCapture(event.pointerId);
+});
+
+lever.addEventListener("pointermove", (event) => {
+  if (dragStartY === null) return;
+  const unitsPerPx = 160 / lever.offsetHeight;
+  const dy = (event.clientY - dragStartY) * unitsPerPx;
+  if (Math.abs(dy) > 4) dragged = true;
+  setPull(Math.min(Math.max(dragStartPull + dy / (KNOB_DOWN - KNOB_UP), 0), 1));
+});
+
+lever.addEventListener("pointerup", () => {
+  dragStartY = null;
+  if (!dragged) return;
+  if (pull >= PULL_TRIGGER) reveal();
+  releaseLever();
+});
+
+// a plain click (or the keyboard) pulls the lever all the way by itself
+lever.addEventListener("click", async () => {
+  if (dragged) {
+    dragged = false;
+    return;
+  }
+  if (!reducedMotion) await animatePull(1, 220);
+  reveal();
+  releaseLever();
 });
