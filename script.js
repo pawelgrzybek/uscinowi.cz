@@ -56,8 +56,12 @@ class Flap {
 const DIGITS = [..."0123456789"];
 const LETTERS = [..."ABCDEFGHIJKLMNOPRSTUWYZĄĆĘŁŃÓŚŹŻ"];
 
-// Nine-letter words about the work, each fills the board on its own pull
-const KEYWORDS = ["BRANDBOOK", "WEBDESIGN", "MOODBOARD"];
+// Nine-letter phrases about the work: an adjective, then a noun on the next pull
+const PHRASES = [
+  ["WONDERFUL", "BRANDBOOK"],
+  ["FANTASTIC", "WEBDESIGN"],
+  ["INSPIRING", "MOODBOARD"],
+];
 
 // Lay out one flap per character, in groups (a group never breaks across lines)
 function buildBoard(el, groups) {
@@ -120,9 +124,9 @@ const IDLE_RESET = 10000;
 let round = [];
 let idleTimer;
 
-// Each round shows the keywords in a random order and ends with the number
+// Each round shows the phrases in a random order and ends with the number
 function nextUp() {
-  if (round.length === 0) round = [...[...KEYWORDS].sort(() => Math.random() - 0.5), PHONE];
+  if (round.length === 0) round = [...[...PHRASES].sort(() => Math.random() - 0.5).flat(), PHONE];
   return round.shift();
 }
 
