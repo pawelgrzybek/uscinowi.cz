@@ -159,10 +159,72 @@ body {
   transition: transform 0.3s cubic-bezier(0.3, 1.8, 0.5, 1);
 }
 
-.press:active .press__cap,
 .press.is-pressed .press__cap {
   transform: translateY(13px);
   transition: transform 0.06s ease-in;
+}
+
+.press__burst line {
+  opacity: 0;
+}
+
+.press.is-clicked .press__burst line {
+  animation: burst 0.45s ease-out;
+}
+
+@keyframes burst {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy));
+  }
+}
+
+/* ---------- falling ball ---------- */
+
+.ball {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+}
+
+.ball[hidden] {
+  display: none;
+}
+
+.ball svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 50% 100%;
+  transition: transform 0.09s;
+}
+
+.ball svg.is-squashed {
+  transform: scale(1.18, 0.78);
+}
+
+.ball circle,
+.ball path {
+  fill: var(--bg);
+  stroke: var(--ink);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.ball path {
+  fill: none;
 }
 
 .press:focus-visible {
