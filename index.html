@@ -11,10 +11,26 @@
   </head>
   <body>
     <main class="stage">
-      <div class="board" id="board" aria-hidden="true"></div>
-      <p class="sr-only" id="number" aria-live="polite"></p>
-      <button class="action" id="reveal" type="button">Call me</button>
-      <a class="action" id="call" hidden>Call me</a>
+      <a class="board" id="board"></a>
+      <button class="press" id="reveal" type="button" aria-label="Pokaż numer telefonu">
+        <svg viewBox="0 0 160 110" aria-hidden="true">
+          <!-- base plate with the hole the button sits in -->
+          <ellipse cx="80" cy="70" rx="70" ry="22" />
+          <ellipse cx="80" cy="70" rx="46" ry="15" />
+          <!-- the button cap, moves down when pressed -->
+          <g class="press__cap">
+            <rect class="no-stroke" x="36" y="40" width="88" height="44" />
+            <line x1="36" y1="40" x2="36" y2="84" />
+            <line x1="124" y1="40" x2="124" y2="84" />
+            <ellipse cx="80" cy="40" rx="44" ry="14" />
+          </g>
+          <!-- front of the plate, drawn over the cap so it sinks into the hole -->
+          <path class="no-stroke" d="M10 70 A70 22 0 0 0 150 70 L126 70 A46 15 0 0 1 34 70 Z" />
+          <path class="no-stroke" d="M10 70 A70 22 0 0 0 150 70 L150 82 A70 22 0 0 1 10 82 Z" />
+          <path class="no-fill" d="M34 70 A46 15 0 0 0 126 70" />
+          <path class="no-fill" d="M10 70 A70 22 0 0 0 150 70 M10 70 V82 A70 22 0 0 0 150 82 V70" />
+        </svg>
+      </button>
     </main>
 
     <script src="script.js"></script>

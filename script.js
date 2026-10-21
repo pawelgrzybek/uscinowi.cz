@@ -1,9 +1,7 @@
 const PHONE = "506186821";
 
 const board = document.getElementById("board");
-const revealButton = document.getElementById("reveal");
-const callLink = document.getElementById("call");
-const numberText = document.getElementById("number");
+const button = document.getElementById("reveal");
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -81,15 +79,17 @@ async function shuffleTo(flap, target, stopAt) {
   if (flap.value !== target) await flap.flip(target, 280);
 }
 
-function showCallLink() {
-  numberText.textContent = `Numer telefonu: ${PHONE.replace(/(\d{3})(?=\d)/g, "$1 ")}`;
-  callLink.href = `tel:+48${digits.join("")}`;
-  revealButton.hidden = true;
-  callLink.hidden = false;
+// Once the number is up, the whole board becomes a tap-to-call link
+function makeCallable() {
+  board.href = `tel:+48${digits.join("")}`;
+  board.setAttribute("aria-label", `Zadzwoń: ${PHONE.replace(/(\d{3})(?=\d)/g, "$1 ")}`);
 }
 
-revealButton.addEventListener("click", async () => {
-  revealButton.disabled = true;
+let running = false;
+
+async function reveal() {
+  if (running) return;
+  running = true;
 
   if (reducedMotion) {
     flaps.forEach((flap, i) => flap.set(digits[i]));
@@ -98,5 +98,13 @@ revealButton.addEventListener("click", async () => {
     await Promise.all(flaps.map((flap, i) => shuffleTo(flap, digits[i], start + 900 + i * 220)));
   }
 
-  showCallLink();
+  makeCallable();
+  running = false;
+}
+
+// Keep the cap down for a moment so even a quick tap shows the press
+button.addEventListener("click", () => {
+  button.classList.add("is-pressed");
+  setTimeout(() => button.classList.remove("is-pressed"), 120);
+  reveal();
 });
