@@ -1,18 +1,170 @@
+:root {
+  --bg: #000;
+  --ink: #f4f1ea;
+  --w: min(calc((100vw - 64px) / 10.8), 104px);
+  --h: calc(var(--w) * 1.45);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-img {
-  width: 100%;
-  max-width: 600px;
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-body {
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
+  min-height: 100dvh;
+  padding: 32px 16px;
+}
+
+/* ---------- split-flap board ---------- */
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px calc(var(--w) * 0.5);
+}
+
+.group {
+  display: flex;
+  gap: calc(var(--w) * 0.12);
+}
+
+.flap {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  perspective: calc(var(--h) * 4);
+  font-family: "Big Shoulders Display", "Helvetica Neue", Arial, sans-serif;
+  font-size: calc(var(--w) * 1.15);
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* the hinge across the middle of each card */
+.flap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 1px);
+  height: 2px;
+  background: var(--ink);
+  z-index: 3;
+}
+
+.half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  background: var(--bg);
+  backface-visibility: hidden;
+}
+
+.half span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 200%;
   display: flex;
   align-items: center;
-  min-height: 100dvh;
   justify-content: center;
-  background-color: #b7e1b0;
+}
+
+.top {
+  top: 0;
+  border-bottom: 0;
+}
+
+.top span {
+  top: 0;
+}
+
+.bottom {
+  bottom: 0;
+  border-top: 0;
+}
+
+.bottom span {
+  bottom: 0;
+}
+
+.fold {
+  z-index: 2;
+  transform-origin: bottom;
+}
+
+.unfold {
+  z-index: 2;
+  transform-origin: top;
+  transform: rotateX(90deg);
+}
+
+/* ---------- button ---------- */
+
+.action {
+  min-width: 220px;
+  padding: 16px 32px;
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.action:hover,
+.action:focus-visible {
+  background: var(--ink);
+  color: var(--bg);
+  outline: none;
+}
+
+.action:disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.action[hidden] {
+  display: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* phones: one group of three per row */
+@media (max-width: 600px) {
+  :root {
+    --w: min(calc((100vw - 32px) / 3.6), 76px);
+  }
+
+  .board {
+    flex-direction: column;
+    align-items: center;
+  }
 }
