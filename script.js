@@ -244,9 +244,9 @@ lever.addEventListener("click", async () => {
 
 // Neon logo above the board and the e-mail below: both sit there as dark,
 // barely visible tubes until the switch in the corner lights them up. Lit,
-// the logo runs frame by frame like an old Las Vegas sign: the leg swaps
-// poses and the cap tumbles away.
-const SIGN_FRAMES = 6; // legs swap every frame, the cap loops through three spots
+// the logo runs frame by frame like an old Las Vegas sign: the leg swings
+// back in three steps while the cap tumbles away.
+const SIGN_FRAMES = 6; // the leg and the cap each step through three poses, twice
 const SIGN_FRAME_TIME = 550;
 const cornerSwitch = document.getElementById("switch");
 const mail = document.getElementById("mail");
