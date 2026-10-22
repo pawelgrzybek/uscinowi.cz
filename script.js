@@ -238,3 +238,22 @@ lever.addEventListener("click", async () => {
   reveal();
   releaseLever();
 });
+
+// Switch in the corner lights the e-mail up as a neon sign
+const cornerSwitch = document.getElementById("switch");
+const mail = document.getElementById("mail");
+let neonOffTimer;
+
+cornerSwitch.addEventListener("click", () => {
+  const on = cornerSwitch.getAttribute("aria-pressed") !== "true";
+  cornerSwitch.setAttribute("aria-pressed", String(on));
+  clearTimeout(neonOffTimer);
+
+  if (on) {
+    mail.classList.remove("is-off");
+    mail.classList.add("is-on");
+  } else {
+    mail.classList.replace("is-on", "is-off");
+    neonOffTimer = setTimeout(() => mail.classList.remove("is-off"), 350);
+  }
+});

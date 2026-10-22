@@ -163,8 +163,183 @@ body {
   outline-offset: 6px;
 }
 
+/* ---------- e-mail as a lime neon sign ---------- */
+
+.mail {
+  --glow: #b8ff00;
+  grid-row: 3;
+  grid-column: 1;
+  align-self: end;
+  margin-bottom: 4dvh;
+  font-family: Comfortaa, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 500;
+  font-size: clamp(18px, 1.8vw, 26px);
+  white-space: nowrap;
+  color: #efff9e;
+  text-decoration: none;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 6px var(--glow),
+    0 0 14px var(--glow),
+    0 0 28px var(--glow),
+    0 0 56px #7dff00;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.mail__at {
+  color: #f8ffd0;
+}
+
+/* flickers on like a tube warming up, then stays lit */
+.mail.is-on {
+  visibility: visible;
+  animation: neon-on 1.6s linear forwards;
+}
+
+/* the @ tube is on its way out and stutters now and then */
+.mail.is-on .mail__at {
+  animation: neon-stutter 4.3s 1.6s linear infinite;
+}
+
+.mail.is-off {
+  visibility: visible;
+  animation: neon-off 0.35s linear forwards;
+}
+
+@keyframes neon-on {
+  0%,
+  4% {
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  9% {
+    opacity: 0;
+  }
+  16% {
+    opacity: 0.8;
+  }
+  19%,
+  30% {
+    opacity: 0.1;
+  }
+  33% {
+    opacity: 1;
+  }
+  37% {
+    opacity: 0.3;
+  }
+  42%,
+  55% {
+    opacity: 1;
+  }
+  57% {
+    opacity: 0.5;
+  }
+  60%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes neon-stutter {
+  0%,
+  60%,
+  64%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  61%,
+  67% {
+    opacity: 0.15;
+  }
+  62% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes neon-off {
+  0% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  45% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mail.is-on {
+    animation: none;
+    opacity: 1;
+  }
+
+  .mail.is-on .mail__at,
+  .mail.is-off {
+    animation: none;
+  }
+}
+
+/* ---------- switch in the corner ---------- */
+
+.switch {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 6;
+  width: 54px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.switch svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.switch svg * {
+  fill: var(--bg);
+  stroke: var(--ink);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+/* the knob slides to the right when switched on */
+.switch__knob {
+  transform-box: view-box;
+  transition: transform 0.18s ease-in-out;
+}
+
+.switch[aria-pressed="true"] .switch__knob {
+  transform: translateX(32px);
+}
+
+.switch:focus-visible {
+  outline: 2px dashed var(--ink);
+  outline-offset: 6px;
+}
+
 /* phones: one group of three per row */
 @media (max-width: 600px) {
+  .switch {
+    top: 16px;
+    left: 16px;
+  }
+
   :root {
     --w: min(calc((100vw - 32px) / 3.6), 76px);
   }
