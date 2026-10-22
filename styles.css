@@ -207,6 +207,34 @@ body {
   filter: url(#neon-glow);
 }
 
+/* switching on, the sign flickers into life in step with the e-mail; it
+   blinks by toggling visibility rather than opacity, so Safari doesn't clip
+   the glow */
+.sign.is-on {
+  animation: sign-on 1.6s linear;
+}
+
+@keyframes sign-on {
+  0%,
+  4%,
+  9%,
+  19%,
+  30%,
+  37%,
+  57% {
+    visibility: hidden;
+  }
+  6%,
+  16%,
+  33%,
+  42%,
+  55%,
+  60%,
+  100% {
+    visibility: visible;
+  }
+}
+
 /* now and then the whole sign stutters */
 .sign.is-flickering {
   animation: sign-flicker 0.5s linear;
@@ -338,7 +366,8 @@ body {
     opacity: 1;
   }
 
-  .mail.is-on .mail__at {
+  .mail.is-on .mail__at,
+  .sign.is-on {
     animation: none;
   }
 }
