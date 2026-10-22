@@ -391,7 +391,8 @@ body {
 @media (max-width: 600px) {
   /* higher up, clear of the browser's bottom bar */
   .mail {
-    margin-bottom: calc(22dvh + env(safe-area-inset-bottom) - 60px);
+    /* half a card (card height is 1.45 × width) lower than before */
+    margin-bottom: calc(22dvh + env(safe-area-inset-bottom) - 60px - var(--w) * 0.725);
   }
 
   .sign {
