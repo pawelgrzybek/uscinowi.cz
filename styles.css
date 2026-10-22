@@ -455,15 +455,26 @@ body {
 
 /* phones: one group of three per row */
 @media (max-width: 600px) {
-  /* higher up, clear of the browser's bottom bar */
+  /* On a phone everything stacks with even gaps between the switch and line
+     of text at the top and the logo at the bottom, and shrinks to fit short
+     screens such as an iPhone mini with Safari's bars showing. */
+  .stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 92px 16px calc(80px + env(safe-area-inset-bottom));
+  }
+
   .mail {
-    /* half a card (card height is 1.45 × width) lower than before */
-    margin-bottom: calc(22dvh + env(safe-area-inset-bottom) - 60px - var(--w) * 0.725);
+    align-self: center;
+    margin: -60px;
   }
 
   .sign {
-    width: 128px;
-    margin-bottom: 24px;
+    align-self: center;
+    width: min(128px, 22dvh);
+    margin-bottom: 0;
   }
 
   .switch {
@@ -489,7 +500,7 @@ body {
   }
 
   :root {
-    --w: min(calc((100vw - 32px) / 4.5), 60px);
+    --w: min(calc((100vw - 32px) / 4.5), 60px, calc((100dvh - 430px) / 4.5));
   }
 
   .board {
