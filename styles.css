@@ -167,22 +167,28 @@ body {
 
 .mail {
   --glow: #b8ff00;
+  --neon-shadow:
+    0 0 2px #fff,
+    0 0 6px var(--glow),
+    0 0 14px var(--glow),
+    0 0 28px var(--glow),
+    0 0 56px #7dff00;
   grid-row: 3;
   grid-column: 1;
   align-self: end;
-  margin-bottom: 4dvh;
+  /* room for the glow inside the box, so Safari doesn't clip it while
+     the sign flickers; the negative margin keeps the text where it was */
+  padding: 60px;
+  margin: -60px;
+  margin-bottom: calc(4dvh - 60px);
   font-family: Comfortaa, "Helvetica Neue", Arial, sans-serif;
   font-weight: 500;
   font-size: clamp(18px, 1.8vw, 26px);
   white-space: nowrap;
   color: #efff9e;
   text-decoration: none;
-  text-shadow:
-    0 0 2px #fff,
-    0 0 6px var(--glow),
-    0 0 14px var(--glow),
-    0 0 28px var(--glow),
-    0 0 56px #7dff00;
+  -webkit-tap-highlight-color: transparent;
+  text-shadow: var(--neon-shadow);
   opacity: 0;
   visibility: hidden;
 }
@@ -244,20 +250,25 @@ body {
   }
 }
 
+/* dims through colour and glow rather than opacity, so Safari doesn't put
+   the @ on its own layer and clip the glow into a square */
 @keyframes neon-stutter {
   0%,
   60%,
   64%,
   70%,
   100% {
-    opacity: 1;
+    color: #f8ffd0;
+    text-shadow: var(--neon-shadow);
   }
   61%,
   67% {
-    opacity: 0.15;
+    color: #2a3310;
+    text-shadow: none;
   }
   62% {
-    opacity: 0.8;
+    color: #cfe08a;
+    text-shadow: 0 0 6px var(--glow);
   }
 }
 
