@@ -512,8 +512,13 @@ body {
 
   .sign {
     align-self: center;
-    width: min(128px, 22dvh);
+    width: min(180px, 28dvh);
     margin-bottom: 0;
+  }
+
+  /* thinner tubes so the small sign's details don't run together */
+  .tube {
+    stroke-width: 1.2px;
   }
 
   .switch {
@@ -544,7 +549,7 @@ body {
   }
 
   :root {
-    --w: min(calc((100vw - 32px) / 4.5), 60px, calc((100dvh - 430px) / 4.5));
+    --w: min(calc((100vw - 32px) / 4.5), 60px, calc((100dvh - 470px) / 4.5));
   }
 
   .board {
