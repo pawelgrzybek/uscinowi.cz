@@ -502,12 +502,16 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    padding: 92px 16px calc(80px + env(safe-area-inset-bottom));
+    padding: 92px 16px calc(110px + env(safe-area-inset-bottom));
   }
 
+  /* the e-mail sits just above the logo at the bottom (60px is its glow padding) */
   .mail {
-    align-self: center;
-    margin: -60px;
+    position: fixed;
+    bottom: calc(79px + env(safe-area-inset-bottom) - 60px);
+    left: 50%;
+    margin: 0;
+    transform: translateX(-50%);
   }
 
   .sign {
@@ -549,7 +553,7 @@ body {
   }
 
   :root {
-    --w: min(calc((100vw - 32px) / 4.5), 60px, calc((100dvh - 470px) / 4.5));
+    --w: min(calc((100vw - 32px) / 4.5), 60px, calc((100dvh - 420px) / 4.5));
   }
 
   .board {
