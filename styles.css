@@ -379,7 +379,7 @@ body {
   top: 20px;
   right: 24px;
   z-index: 6;
-  width: 110px;
+  width: 160px;
 }
 
 .logo svg {
@@ -455,7 +455,7 @@ body {
   .logo {
     top: 12px;
     right: 16px;
-    width: 84px;
+    width: 100px;
   }
 
   :root {
