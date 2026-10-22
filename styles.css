@@ -232,11 +232,10 @@ body {
 
 .mail {
   --glow: #b8ff00;
+  /* same two blur layers as the glow on the ostrich */
   --neon-shadow:
-    0 0 6px var(--glow),
-    0 0 14px var(--glow),
-    0 0 28px var(--glow),
-    0 0 56px #7dff00;
+    0 0 4px var(--glow),
+    0 0 14px var(--glow);
   grid-row: 3;
   grid-column: 1;
   align-self: end;
