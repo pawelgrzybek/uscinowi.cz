@@ -193,10 +193,10 @@ body {
   stroke: var(--tube);
 }
 
-/* switched off: dark, barely visible tubes; switched on: lime and glowing,
-   the same colour as the e-mail neon */
+/* switched off: invisible; switched on: lime and glowing, the same colour
+   as the e-mail neon */
 .sign {
-  --tube: #141414;
+  --tube: transparent;
 }
 
 .sign.is-on {
@@ -248,14 +248,15 @@ body {
   font-weight: 500;
   font-size: clamp(18px, 1.8vw, 26px);
   white-space: nowrap;
-  /* switched off: a dark, barely visible tube */
-  color: #141414;
+  /* switched off: hidden until the switch lights it up */
+  visibility: hidden;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 /* flickers on like a tube warming up, then stays lit */
 .mail.is-on {
+  visibility: visible;
   color: #b8ff00;
   text-shadow: var(--neon-shadow);
   animation: neon-on 1.6s linear forwards;
@@ -342,6 +343,23 @@ body {
   }
 }
 
+/* ---------- white emu logo in the top right corner ---------- */
+
+.logo {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 6;
+  width: 110px;
+}
+
+.logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  fill: var(--ink);
+}
+
 /* ---------- switch in the corner ---------- */
 
 .switch {
@@ -403,6 +421,12 @@ body {
   .switch {
     top: 16px;
     left: 16px;
+  }
+
+  .logo {
+    top: 12px;
+    right: 16px;
+    width: 84px;
   }
 
   :root {
