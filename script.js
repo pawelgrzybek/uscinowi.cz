@@ -241,21 +241,57 @@ lever.addEventListener("click", async () => {
   releaseLever();
 });
 
-// Switch in the corner lights the e-mail up as a neon sign
+
+// Neon logo above the board and the e-mail below: both sit there as dark,
+// barely visible tubes until the switch in the corner lights them up. Lit,
+// the logo runs frame by frame like an old Las Vegas sign: the leg swaps
+// poses and the cap tumbles away.
+const SIGN_FRAMES = 6; // legs swap every frame, the cap loops through three spots
+const SIGN_FRAME_TIME = 550;
 const cornerSwitch = document.getElementById("switch");
 const mail = document.getElementById("mail");
-let neonOffTimer;
+const sign = document.querySelector(".sign");
+const tubes = [...sign.querySelectorAll(".tube")].map((el) => ({
+  el,
+  frames: el.dataset.frames ? el.dataset.frames.split(" ").map(Number) : null,
+}));
+let signFrame = 0;
+let signTimer;
+let flickerTimer;
+
+function showSignFrame() {
+  for (const { el, frames } of tubes) el.classList.toggle("is-lit", !frames || frames.includes(signFrame));
+}
+
+// a stutter every few seconds while lit
+function scheduleFlicker() {
+  flickerTimer = setTimeout(() => {
+    sign.classList.add("is-flickering");
+    setTimeout(() => sign.classList.remove("is-flickering"), 500);
+    scheduleFlicker();
+  }, 5000 + Math.random() * 6000);
+}
+
+function setNeon(on) {
+  cornerSwitch.setAttribute("aria-pressed", String(on));
+  sign.classList.toggle("is-on", on);
+  mail.classList.toggle("is-on", on);
+  clearInterval(signTimer);
+  clearTimeout(flickerTimer);
+  signFrame = 0;
+  showSignFrame();
+
+  if (on && !reducedMotion) {
+    signTimer = setInterval(() => {
+      signFrame = (signFrame + 1) % SIGN_FRAMES;
+      showSignFrame();
+    }, SIGN_FRAME_TIME);
+    scheduleFlicker();
+  }
+}
+
+setNeon(false);
 
 cornerSwitch.addEventListener("click", () => {
-  const on = cornerSwitch.getAttribute("aria-pressed") !== "true";
-  cornerSwitch.setAttribute("aria-pressed", String(on));
-  clearTimeout(neonOffTimer);
-
-  if (on) {
-    mail.classList.remove("is-off");
-    mail.classList.add("is-on");
-  } else {
-    mail.classList.replace("is-on", "is-off");
-    neonOffTimer = setTimeout(() => mail.classList.remove("is-off"), 350);
-  }
+  setNeon(cornerSwitch.getAttribute("aria-pressed") !== "true");
 });

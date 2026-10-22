@@ -163,12 +163,76 @@ body {
   outline-offset: 6px;
 }
 
+/* ---------- Las Vegas style neon logo above the board ---------- */
+
+.sign {
+  grid-row: 1;
+  grid-column: 1;
+  align-self: end;
+  width: clamp(150px, 20vw, 300px);
+  margin-bottom: 40px;
+}
+
+.sign svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* only the tubes of the current frame show */
+.tube {
+  fill: none;
+  stroke: none;
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.tube.is-lit {
+  stroke: var(--tube);
+}
+
+/* switched off: dark, barely visible tubes; switched on: lime and glowing,
+   the same colour as the e-mail neon */
+.sign {
+  --tube: #141414;
+}
+
+.sign.is-on {
+  --tube: #b8ff00;
+}
+
+.sign.is-on .tube.is-lit {
+  filter: url(#neon-glow);
+}
+
+/* now and then the whole sign stutters */
+.sign.is-flickering {
+  animation: sign-flicker 0.5s linear;
+}
+
+@keyframes sign-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.25;
+  }
+  35% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
 /* ---------- e-mail as a lime neon sign ---------- */
 
 .mail {
   --glow: #b8ff00;
   --neon-shadow:
-    0 0 2px #fff,
     0 0 6px var(--glow),
     0 0 14px var(--glow),
     0 0 28px var(--glow),
@@ -185,22 +249,21 @@ body {
   font-weight: 500;
   font-size: clamp(18px, 1.8vw, 26px);
   white-space: nowrap;
-  color: #efff9e;
+  /* switched off: a dark, barely visible tube */
+  color: #141414;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  text-shadow: var(--neon-shadow);
-  opacity: 0;
-  visibility: hidden;
-}
-
-.mail__at {
-  color: #f8ffd0;
 }
 
 /* flickers on like a tube warming up, then stays lit */
 .mail.is-on {
-  visibility: visible;
+  color: #b8ff00;
+  text-shadow: var(--neon-shadow);
   animation: neon-on 1.6s linear forwards;
+}
+
+.mail.is-on .mail__at {
+  color: #b8ff00;
 }
 
 /* the @ tube is on its way out and stutters now and then */
@@ -208,10 +271,6 @@ body {
   animation: neon-stutter 4.3s 1.6s linear infinite;
 }
 
-.mail.is-off {
-  visibility: visible;
-  animation: neon-off 0.35s linear forwards;
-}
 
 @keyframes neon-on {
   0%,
@@ -258,7 +317,7 @@ body {
   64%,
   70%,
   100% {
-    color: #f8ffd0;
+    color: #b8ff00;
     text-shadow: var(--neon-shadow);
   }
   61%,
@@ -272,20 +331,6 @@ body {
   }
 }
 
-@keyframes neon-off {
-  0% {
-    opacity: 1;
-  }
-  30% {
-    opacity: 0.2;
-  }
-  45% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 0;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .mail.is-on {
@@ -293,8 +338,7 @@ body {
     opacity: 1;
   }
 
-  .mail.is-on .mail__at,
-  .mail.is-off {
+  .mail.is-on .mail__at {
     animation: none;
   }
 }
@@ -346,6 +390,11 @@ body {
 
 /* phones: one group of three per row */
 @media (max-width: 600px) {
+  .sign {
+    width: 128px;
+    margin-bottom: 24px;
+  }
+
   .switch {
     top: 16px;
     left: 16px;
