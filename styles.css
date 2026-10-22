@@ -372,14 +372,33 @@ body {
   }
 }
 
-/* ---------- white emu logo in the top right corner ---------- */
+/* ---------- small lowercase line at the top centre ---------- */
 
+.tagline {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  z-index: 6;
+  transform: translateX(-50%);
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 14px;
+  line-height: 30px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+/* ---------- white emu logo above the e-mail ---------- */
+
+/* centred just above the e-mail (whose text ends about 4dvh + 32px from
+   the bottom and is about 30px tall) */
 .logo {
   position: fixed;
-  top: 20px;
-  right: 24px;
+  bottom: calc(4dvh + 78px);
+  left: 50%;
   z-index: 6;
-  width: 160px;
+  width: 180px;
+  transform: translateX(-50%);
 }
 
 .logo svg {
@@ -449,13 +468,24 @@ body {
 
   .switch {
     top: 16px;
-    left: 16px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
+  /* the switch sits centred above the line of text */
+  .tagline {
+    top: 52px;
+    font-size: 12px;
+  }
+
+  /* no room in the top corner on a phone: the logo sits at the very bottom */
   .logo {
-    top: 12px;
-    right: 16px;
-    width: 100px;
+    top: auto;
+    right: auto;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    left: 50%;
+    width: 90px;
+    transform: translateX(-50%);
   }
 
   :root {
