@@ -160,6 +160,7 @@ async function resetBoard() {
 const lever = document.getElementById("lever");
 const arm = lever.querySelector(".lever__arm");
 const knob = lever.querySelector(".lever__knob");
+const knobDot = lever.querySelector(".lever__knob-dot");
 const KNOB_UP = 20;
 const KNOB_DOWN = 240;
 const PULL_TRIGGER = 0.6;
@@ -174,6 +175,7 @@ function setPull(p) {
   const y = KNOB_UP + p * (KNOB_DOWN - KNOB_UP);
   arm.setAttribute("y2", y);
   knob.setAttribute("cy", y);
+  knobDot.setAttribute("cy", y - 4.5); // up and to the right, like a highlight
 }
 
 // the lever snaps back up with a little wobble
