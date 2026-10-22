@@ -109,6 +109,8 @@ body {
 
 .bottom span {
   bottom: 0;
+  /* the lower flap is a touch darker, like a real split-flap board */
+  color: #b8b5ae;
 }
 
 .fold {
