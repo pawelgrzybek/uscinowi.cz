@@ -161,11 +161,13 @@ async function showPhone() {
 
 document.getElementById("dial").addEventListener("click", showPhone);
 
-// Left alone for a while, the board blanks and the round starts over
+// Left alone for a while, the board blanks, the neons switch off and the
+// round starts over
 async function resetBoard() {
   if (running) return;
   running = true;
   removeCallable();
+  setNeon(false);
   await shuffleBoard(flaps, digits.map(() => ""), DIGITS, 220);
   round = [];
   running = false;
