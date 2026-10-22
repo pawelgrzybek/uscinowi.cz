@@ -180,6 +180,25 @@ body {
   overflow: visible;
 }
 
+/* The white logo stands where the neon is while the neon is off. Its bird
+   is the same drawing at 1/2.37 the size, so this places it exactly on the
+   neon bird, with the "emu" lettering running off to the right. */
+.sign {
+  position: relative;
+}
+
+.sign .sign__logo {
+  position: absolute;
+  top: 1.04%;
+  left: 0.99%;
+  width: 207.7%;
+  fill: var(--ink);
+}
+
+.sign.is-on .sign__logo {
+  visibility: hidden;
+}
+
 /* only the tubes of the current frame show */
 .tube {
   fill: none;
@@ -372,23 +391,6 @@ body {
   }
 }
 
-/* ---------- white emu logo in the top right corner ---------- */
-
-.logo {
-  position: fixed;
-  top: 20px;
-  right: 24px;
-  z-index: 6;
-  width: 160px;
-}
-
-.logo svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  fill: var(--ink);
-}
-
 /* ---------- switch in the corner ---------- */
 
 .switch {
@@ -442,20 +444,15 @@ body {
     margin-bottom: calc(22dvh + env(safe-area-inset-bottom) - 60px - var(--w) * 0.725);
   }
 
+  /* small enough that the white logo's lettering still fits on screen */
   .sign {
-    width: 128px;
+    width: 110px;
     margin-bottom: 24px;
   }
 
   .switch {
     top: 16px;
     left: 16px;
-  }
-
-  .logo {
-    top: 12px;
-    right: 16px;
-    width: 100px;
   }
 
   :root {
