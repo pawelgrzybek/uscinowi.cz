@@ -449,6 +449,21 @@ body {
   fill: var(--ink);
 }
 
+/* ---------- "nemám sociální sítě" (no social media) line at the very bottom ---------- */
+
+.socials {
+  position: fixed;
+  bottom: calc(22px + env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 6;
+  transform: translateX(-50%);
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
 /* ---------- switch in the corner ---------- */
 
 .switch {
@@ -504,13 +519,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    padding: 92px 16px calc(110px + env(safe-area-inset-bottom));
+    padding: 92px 16px calc(146px + env(safe-area-inset-bottom));
   }
 
   /* the e-mail sits just above the logo at the bottom (60px is its glow padding) */
   .mail {
     position: fixed;
-    bottom: calc(79px + env(safe-area-inset-bottom) - 60px);
+    bottom: calc(115px + env(safe-area-inset-bottom) - 60px);
     left: 50%;
     margin: 0;
     transform: translateX(-50%);
@@ -544,18 +559,23 @@ body {
     right: 16px;
   }
 
+  .socials {
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    font-size: 12px;
+  }
+
   /* no room in the top corner on a phone: the logo sits at the very bottom */
   .logo {
     top: auto;
     right: auto;
-    bottom: calc(20px + env(safe-area-inset-bottom));
+    bottom: calc(56px + env(safe-area-inset-bottom));
     left: 50%;
     width: 90px;
     transform: translateX(-50%);
   }
 
   :root {
-    --w: min(calc((100vw - 32px) / 4.5), 60px, calc((100dvh - 420px) / 4.5));
+    --w: min(calc((100vw - 32px) / 4.5), 60px, calc((100dvh - 456px) / 4.5));
   }
 
   .board {
