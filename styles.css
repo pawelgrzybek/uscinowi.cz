@@ -391,7 +391,7 @@ body {
 @media (max-width: 600px) {
   /* higher up, clear of the browser's bottom bar */
   .mail {
-    margin-bottom: calc(14dvh + env(safe-area-inset-bottom) - 60px);
+    margin-bottom: calc(22dvh + env(safe-area-inset-bottom) - 60px);
   }
 
   .sign {
@@ -405,7 +405,7 @@ body {
   }
 
   :root {
-    --w: min(calc((100vw - 32px) / 3.6), 76px);
+    --w: min(calc((100vw - 32px) / 4.5), 60px);
   }
 
   .board {
