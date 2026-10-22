@@ -389,6 +389,11 @@ body {
 
 /* phones: one group of three per row */
 @media (max-width: 600px) {
+  /* higher up, clear of the browser's bottom bar */
+  .mail {
+    margin-bottom: calc(14dvh + env(safe-area-inset-bottom) - 60px);
+  }
+
   .sign {
     width: 128px;
     margin-bottom: 24px;
