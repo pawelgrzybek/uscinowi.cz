@@ -29,6 +29,7 @@ body {
 /* ---------- split-flap board ---------- */
 
 .machine {
+  --lever-h: calc(var(--w) * 2);
   position: relative;
   grid-row: 2;
   grid-column: 1;
@@ -124,7 +125,6 @@ body {
 /* ---------- slot machine lever ---------- */
 
 .lever {
-  --lever-h: calc(var(--w) * 2);
   position: absolute;
   /* same gap as between the cards */
   left: calc(100% + var(--w) * 0.12);
@@ -158,6 +158,45 @@ body {
   vector-effect: non-scaling-stroke;
 }
 
+/* phone button in the top right corner: straight to the number */
+.dial {
+  position: fixed;
+  /* level with the switch */
+  top: 23px;
+  right: 24px;
+  z-index: 6;
+  width: 32px;
+  /* a bigger invisible area around the icon, easier to tap */
+  box-sizing: content-box;
+  padding: 10px;
+  margin: -10px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dial svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dial svg * {
+  vector-effect: non-scaling-stroke;
+}
+
+.dial:active svg {
+  transform: scale(0.88);
+}
+
+.dial:focus-visible,
 .lever:focus-visible {
   outline: 2px dashed var(--ink);
   outline-offset: 6px;
@@ -487,6 +526,11 @@ body {
   .tagline {
     top: 52px;
     font-size: 12px;
+  }
+
+  .dial {
+    top: 15px;
+    right: 16px;
   }
 
   /* no room in the top corner on a phone: the logo sits at the very bottom */

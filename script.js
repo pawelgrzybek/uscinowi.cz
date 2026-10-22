@@ -145,6 +145,22 @@ async function reveal() {
   idleTimer = setTimeout(resetBoard, IDLE_RESET);
 }
 
+// The phone button skips the words and shuffles straight to the number;
+// the next pull of the lever starts a fresh round
+async function showPhone() {
+  if (running) return;
+  running = true;
+  clearTimeout(idleTimer);
+  round = [];
+  removeCallable();
+  await shuffleBoard(flaps, digits, DIGITS, 110);
+  makeCallable();
+  running = false;
+  idleTimer = setTimeout(resetBoard, IDLE_RESET);
+}
+
+document.getElementById("dial").addEventListener("click", showPhone);
+
 // Left alone for a while, the board blanks and the round starts over
 async function resetBoard() {
   if (running) return;
